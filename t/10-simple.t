@@ -39,6 +39,10 @@ isa_ok($test,'TestMooXClassStashSimple');
 my $stash = $test->class_stash;
 isa_ok($stash,'MooX::ClassStash');
 
+my $other_test = TestMooXClassStashSimple->new;
+my $other_stash = $test->class_stash;
+is($stash,$other_stash,'Other object has same MooX::ClassStash');
+
 is($test->i,1,'Checking that default value still works for i');
 is($test->j,2,'Checking that default value still works for j');
 is($test->k,2,'Checking that default value still works for k');
@@ -63,6 +67,12 @@ is_deeply($test->class_stash->attributes,{
 		default => $other_default_sub,
 	},
 },'Proper attributes in class stash');
+
+is($test->class_stash->get_attribute( i => 'is'),'ro','get_attribute method works with key');
+is_deeply($test->class_stash->get_attribute('i'),{
+	is => 'ro',
+	default => $default_sub,
+},'get_attribute method works without key');
 
 is_deeply([$test->class_stash->list_all_methods],[qw(
 	add_own_data
@@ -95,5 +105,14 @@ $test->add_own_data( bla => 'wubwubwub' );
 is_deeply($test->get_own_data,{
 	bla => 'wubwubwub'
 },'Proper data in class stash for other caller');
+
+$test->class_stash->add_attribute( l => (
+	is => 'rw',
+));
+
+$test->l(3);
+
+is($test->l,3,'new added attribute works');
+is($test->class_stash->get_attribute( l => 'is' ),'rw','get_attribute of a new added attribute works');
 
 done_testing;
