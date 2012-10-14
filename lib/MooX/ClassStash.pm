@@ -14,7 +14,7 @@ package MooX::ClassStash;
     sub get_own_data { shift->class_stash->get_data(@_) }
   }
 
-  # or with L<MooX>
+  # or with MooX
 
   {
     package MyClass;
@@ -56,7 +56,7 @@ sub import {
 	my ( $class, @args ) = @_;
 	my $target = caller;
 	unless ($target->can('has')) {
-		warn "Not using ".$class." on a Moo class, doing nothing";
+		warn "Not using ".$class." on a class which is not Moo, doing nothing";
 		return;
 	}
 	return if defined $stash_cache{$target};
