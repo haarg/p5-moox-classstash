@@ -76,7 +76,7 @@ has class => (
 
 =attr package_stash
 
-The L<Package::Stash> object of the given class
+The L<Package::Stash> object of the given class.
 
 =cut
 
@@ -188,8 +188,8 @@ sub add_data {
 
 =method get_data
 
-Get your, caller specific, data. If you give a paramter, if will only give
-back the value of this key. If none is given, you get a HashRef of all the
+Get your, caller specific, data. If you give a parameter, if will only give
+back the value of this key. If none is given, you get the HashRef of all the
 data stored.
 
 =cut
@@ -207,6 +207,10 @@ sub get_data {
 }
 
 =method remove_data
+
+Remove from your, caller specific, data the given key of the HashRef. There is
+no direct call to delete all the data at once.
+
 =cut
 
 sub remove_data {
@@ -218,6 +222,10 @@ sub remove_data {
 }
 
 =method add_keyword
+
+Adds the given CodeRef as function to the package, but also add it to
+L</keyword_functions> list, so that it gets excluded on method listings.
+
 =cut
 
 sub add_keyword { 
@@ -230,16 +238,26 @@ sub add_keyword {
 # so far no check if its not a keyword
 
 =method get_keyword
+
+Get the CodeRef of the given keyword. Technical identical to L</get_method>.
+
 =cut
 
 sub get_keyword { shift->get_method(@_) }
 
 =method has_keyword
+
+Checks for the given keyword. Technical identical to L</has_method>.
+
 =cut
 
 sub has_keyword { shift->has_method(@_) }
 
 =method remove_keyword
+
+Remove the function from the package, but also remove it from
+L</keyword_functions> list.
+
 =cut
 
 sub remove_keyword {
@@ -252,7 +270,8 @@ sub remove_keyword {
 	$self->remove_method($keyword, @_);
 }
 
-=method get_or_add_keyword_keyword
+=method get_or_add_keyword
+
 =cut
 
 sub get_or_add_keyword {
@@ -327,21 +346,33 @@ sub list_all_keywords {
 }
 
 =method add_method
+
+Add a method to the class.
+
 =cut
 
 sub add_method { shift->add_symbol('&'.(shift),@_) }
 
 =method get_method
+
+Get the CodeRef of the given method name.
+
 =cut
 
 sub get_method { shift->get_symbol('&'.(shift),@_) }
 
 =method has_method
+
+Checks if the given method exist.
+
 =cut
 
 sub has_method { shift->has_symbol('&'.(shift),@_) }
 
 =method remove_method
+
+Delete the given method from the class.
+
 =cut
 
 sub remove_method { shift->remove_symbol('&'.(shift),@_) }
@@ -352,6 +383,10 @@ sub remove_method { shift->remove_symbol('&'.(shift),@_) }
 sub get_or_add_method { shift->get_or_add_symbol('&'.(shift),@_) }
 
 =method list_all_methods
+
+List all methods of the class. This method fetches all functions of the
+package and filters out the keywords from L</keyword_functions>.
+
 =cut
 
 sub list_all_methods {
@@ -364,16 +399,28 @@ sub list_all_methods {
 }
 
 =method after_method
+
+Install an after modifier on the function given by the first parameter, with
+the CodeRef given as second parameter. See L<Moo/after>.
+
 =cut
 
 sub after_method { install_modifier(shift->class,'after',@_) }
 
 =method before_method
+
+Install a before modifier on the function given by the first parameter, with
+the CodeRef given as second parameter. See L<Moo/before>.
+
 =cut
 
 sub before_method { install_modifier(shift->class,'before',@_) }
 
 =method around_method
+
+Install an around modifier on the function given by the first parameter, with
+the CodeRef given as second parameter. See L<Moo/around>.
+
 =cut
 
 sub around_method { install_modifier(shift->class,'around',@_) }
