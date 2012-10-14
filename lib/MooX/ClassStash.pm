@@ -38,7 +38,7 @@ package MooX::ClassStash;
 
 use Moo;
 use Package::Stash;
-use Class::Method::Modifiers qw(:all);
+use Class::Method::Modifiers qw( install_modifier );
 
 my %stash_cache;
 
