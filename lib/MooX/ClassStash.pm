@@ -14,6 +14,16 @@ package MooX::ClassStash;
     sub get_own_data { shift->class_stash->get_data(@_) }
   }
 
+  # or with L<MooX>
+
+  {
+    package MyClass;
+    use MooX qw(
+      ClassStash
+    );
+    ...
+  }
+
   my $class_stash = MyClass->class_stash;
   # or MyClass->new->class_stash
 
