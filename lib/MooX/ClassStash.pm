@@ -153,8 +153,9 @@ sub BUILD {
 	$self->around_method('has',sub {
 		my $orig = shift;
 		my $method = shift;
+		my $data = { @_ };
 		for (ref $method eq 'ARRAY' ? @{$method} : ($method)) {
-			$self->attributes->{$_} = { @_ };
+			$self->attributes->{$_} = $data;
 		}
 		$orig->($method, @_);
 	})
