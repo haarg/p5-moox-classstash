@@ -45,6 +45,10 @@ my %stash_cache;
 sub import {
 	my ( $class, @args ) = @_;
 	my $target = caller;
+	unless ($target->can('has')) {
+		warn "Not using ".$class." on a Moo class, doing nothing";
+		return;
+	}
 	return if defined $stash_cache{$target};
 	$stash_cache{$target} = $class->new($target);
 }
