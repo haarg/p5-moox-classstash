@@ -74,7 +74,7 @@ has class => (
 	required => 1,
 );
 
-=attr class
+=attr package_stash
 
 The L<Package::Stash> object of the given class
 
