@@ -27,10 +27,10 @@ package MooX::ClassStash;
   print $class_stash->list_all_keywords;
 
   $class_stash->add_data( a => 1 ); # caller specific
-  $class_stash->add_own_data( a => 2 );
+  MyClass->add_own_data( a => 2 );
 
   print $class_stash->get_data('a'); # 1
-  print $class_stash->get_own_data('a'); # 2
+  print MyClass->get_own_data('a'); # 2
 
 =head1 DESCRIPTION
 
