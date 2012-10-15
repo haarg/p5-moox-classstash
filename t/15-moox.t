@@ -6,7 +6,11 @@ use Test::More;
 
 eval { require MooX };
 
-plan skip_all => "No MooX installed" if $@;
+if ($@) {
+	plan skip_all => "No MooX installed";
+	done_testing;
+	exit 0;
+}
 
 my $default_sub = sub {1};
 
