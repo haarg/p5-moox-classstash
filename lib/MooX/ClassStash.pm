@@ -319,19 +319,22 @@ sub has_attribute {
 
 =method remove_attribute
 
-B<Not implemented yet>
+If you want it, implement it... ;)
 
 =cut
 
-sub remove_attribute { ... }
+sub remove_attribute { die "If you need MooX::ClassStash->remove_attribute, patches welcome" }
 
 =method get_or_add_attribute
-
-B<Not implemented yet>
-
 =cut
 
-sub get_or_add_attribute { ... }
+sub get_or_add_attribute {
+	my $self = shift;
+	my $attribute = shift;
+	die __PACKAGE__."->get_or_add_attribute requires complete attribute definition" if @_ % 2 or @_ == 0;
+	$self->add_attribute($attribute => @_) unless defined $self->attributes->{$attribute};
+	return $self->attributes->{$attribute};
+}
 
 =method list_all_keywords
 =cut
