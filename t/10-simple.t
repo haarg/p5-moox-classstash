@@ -33,27 +33,17 @@ my $other_default_sub = sub {2};
 	}
 }
 
-my $test = TestMooXClassStashSimple->new;
-isa_ok($test,'TestMooXClassStashSimple');
+my $test_class = 'TestMooXClassStashSimple';
+isa_ok($test_class,'TestMooXClassStashSimple');
 
-my $stash = $test->class_stash;
+my $stash = $test_class->class_stash;
 isa_ok($stash,'MooX::ClassStash');
 
-my $other_test = TestMooXClassStashSimple->new;
-my $other_stash = $test->class_stash;
+my $other_test_class = 'TestMooXClassStashSimple';
+my $other_stash = $other_test_class->class_stash;
 is($stash,$other_stash,'Other object has same MooX::ClassStash');
 
-is($test->i,1,'Checking that default value still works for i');
-is($test->j,2,'Checking that default value still works for j');
-is($test->k,2,'Checking that default value still works for k');
-
-$test->j(3);
-
-is($test->j,3,'Checking that new value is set for j');
-is($test->i,1,'Checking that default value still is set for i');
-is($test->k,2,'Checking that default value still is set for k');
-
-is_deeply($test->class_stash->attributes,{
+is_deeply($stash->attributes,{
 	i => {
 		is => 'ro',
 		default => $default_sub,
@@ -68,9 +58,9 @@ is_deeply($test->class_stash->attributes,{
 	},
 },'Proper attributes in class stash');
 
-is($test->class_stash->get_attribute( i => 'is'),'ro','get_attribute method works with key');
+is($stash->get_attribute( i => 'is'),'ro','get_attribute method works with key');
 
-is_deeply([$test->class_stash->get_or_add_attribute( i => (
+is_deeply([$stash->get_or_add_attribute( i => (
 	is => 'ro',
 	default => $default_sub,
 ))],[{
@@ -78,9 +68,9 @@ is_deeply([$test->class_stash->get_or_add_attribute( i => (
 	default => $default_sub,
 }],'get_or_add_attribute method works');
 
-ok(!$test->class_stash->get_attribute('m'),'get_attribute m so far failing');
+ok(!$stash->get_attribute('m'),'get_attribute m so far failing');
 
-is_deeply($test->class_stash->get_or_add_attribute( m => (
+is_deeply($stash->get_or_add_attribute( m => (
 	is => 'ro',
 	default => $default_sub,
 )),{
@@ -88,14 +78,14 @@ is_deeply($test->class_stash->get_or_add_attribute( m => (
 	default => $default_sub,
 },'get_or_add_attribute method works with new generate attribute l');
 
-ok($test->class_stash->get_attribute('m'),'get_attribute m not failing anymore');
+ok($stash->get_attribute('m'),'get_attribute m not failing anymore');
 
-is_deeply($test->class_stash->get_attribute('i'),{
+is_deeply($stash->get_attribute('i'),{
 	is => 'ro',
 	default => $default_sub,
 },'get_attribute method works without key');
 
-is_deeply([$test->class_stash->list_all_methods],[qw(
+is_deeply([$stash->list_all_methods],[qw(
 	add_own_data
 	class_stash
 	get_own_data
@@ -107,7 +97,7 @@ is_deeply([$test->class_stash->list_all_methods],[qw(
 	package_stash
 )],'Proper methods in class stash');
 
-is_deeply([$test->class_stash->list_all_keywords],[qw(
+is_deeply([$stash->list_all_keywords],[qw(
 	after
 	around
 	before
@@ -116,25 +106,38 @@ is_deeply([$test->class_stash->list_all_keywords],[qw(
 	with
 )],'Proper keywords in class stash');
 
-$test->class_stash->add_data( bla => 'blub' );
+$stash->add_data( bla => 'blub' );
 
-is_deeply($test->class_stash->get_data,{
+is_deeply($stash->get_data,{
 	bla => 'blub'
 },'Proper data in class stash for this caller');
 
-$test->add_own_data( bla => 'wubwubwub' );
+$test_class->add_own_data( bla => 'wubwubwub' );
 
-is_deeply($test->get_own_data,{
+is_deeply($test_class->get_own_data,{
 	bla => 'wubwubwub'
 },'Proper data in class stash for other caller');
 
-$test->class_stash->add_attribute( l => (
+$stash->add_attribute( l => (
 	is => 'rw',
 ));
+
+is($stash->get_attribute( l => 'is' ),'rw','get_attribute of a new added attribute works');
+
+my $test = $test_class->new;
+
+is($test->i,1,'Checking that default value still works for i');
+is($test->j,2,'Checking that default value still works for j');
+is($test->k,2,'Checking that default value still works for k');
+
+$test->j(3);
+
+is($test->j,3,'Checking that new value is set for j');
+is($test->i,1,'Checking that default value still is set for i');
+is($test->k,2,'Checking that default value still is set for k');
 
 $test->l(3);
 
 is($test->l,3,'new added attribute works');
-is($test->class_stash->get_attribute( l => 'is' ),'rw','get_attribute of a new added attribute works');
 
 done_testing;
